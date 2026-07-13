@@ -1,0 +1,19 @@
+[package]
+name = "hisi-rom-sys-ws63"
+version = "0.1.0-alpha.1"
+edition = "2024"
+rust-version = "1.85"
+authors = ["sanchuanhehe"]
+license = "MIT"
+description = "Generated WS63 mask-ROM symbol, callback, and radio patch metadata"
+repository = "https://github.com/hispark-rs/hisi-rom-sys-ws63"
+keywords = ["embedded", "no-std", "riscv", "hisilicon", "rom"]
+categories = ["embedded", "no-std"]
+links = "hisi_rom_sys_ws63"
+build = "build.rs"
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+undocumented_unsafe_blocks = "deny"
