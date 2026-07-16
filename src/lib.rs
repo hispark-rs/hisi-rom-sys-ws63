@@ -21,35 +21,14 @@ pub const WIFI_PATCH_COUNT: usize = 37;
 ///
 /// These addresses are transcribed from the Apache-2.0
 /// `security_unified/rom_drv_api/security_rom_table.h` and WS63 porting header
-/// in the matching vendor SDK. They are kept here so consumers do not scatter
-/// chip ROM addresses through protocol or driver code.
+/// in the matching vendor SDK. Only entries proven not to depend on the ROM's
+/// private RAM callback/state area are exposed: that area overlaps normal
+/// application SRAM in standalone Rust images.
 pub mod security {
-    /// Initialize the security-ROM PKE HAL state.
-    pub const HAL_PKE_INIT: usize = 0x0010_3424;
-    /// Release the security-ROM PKE HAL state.
-    pub const HAL_PKE_DEINIT: usize = 0x0010_3438;
-    /// Acquire the hardware PKE owner lock.
-    pub const HAL_PKE_LOCK: usize = 0x0010_3490;
-    /// Release the hardware PKE owner lock.
-    pub const HAL_PKE_UNLOCK: usize = 0x0010_3508;
-    /// Enable PKE power-analysis noise generation.
-    pub const HAL_PKE_ENABLE_NOISE: usize = 0x0010_351e;
-    /// Disable PKE power-analysis noise generation.
-    pub const HAL_PKE_DISABLE_NOISE: usize = 0x0010_3532;
     /// Load one masked operand into PKE data RAM.
     pub const HAL_PKE_SET_RAM: usize = 0x0010_359c;
     /// Read one masked operand from PKE data RAM.
     pub const HAL_PKE_GET_RAM: usize = 0x0010_364a;
-    /// Clear PKE data RAM.
-    pub const HAL_PKE_CLEAN_RAM: usize = 0x0010_3692;
-    /// Configure one PKE single/batch instruction.
-    pub const HAL_PKE_SET_MODE: usize = 0x0010_36a8;
-    /// Start the configured PKE instruction.
-    pub const HAL_PKE_START: usize = 0x0010_371a;
-    /// Wait for completion and return the hardware status.
-    pub const HAL_PKE_WAIT_DONE: usize = 0x0010_3738;
-    /// Program the Montgomery reduction parameter.
-    pub const HAL_PKE_SET_MONT_PARA: usize = 0x0010_37bc;
     /// Load one curve's Montgomery constants into PKE data RAM.
     pub const HAL_PKE_SET_ECC_PARAM: usize = 0x0010_37d0;
 
@@ -115,19 +94,8 @@ mod tests {
     #[test]
     fn security_rom_entry_points_are_halfword_aligned() {
         for address in [
-            security::HAL_PKE_INIT,
-            security::HAL_PKE_DEINIT,
-            security::HAL_PKE_LOCK,
-            security::HAL_PKE_UNLOCK,
-            security::HAL_PKE_ENABLE_NOISE,
-            security::HAL_PKE_DISABLE_NOISE,
             security::HAL_PKE_SET_RAM,
             security::HAL_PKE_GET_RAM,
-            security::HAL_PKE_CLEAN_RAM,
-            security::HAL_PKE_SET_MODE,
-            security::HAL_PKE_START,
-            security::HAL_PKE_WAIT_DONE,
-            security::HAL_PKE_SET_MONT_PARA,
             security::HAL_PKE_SET_ECC_PARAM,
         ] {
             assert_eq!(address & 1, 0);
